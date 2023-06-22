@@ -10,11 +10,10 @@ module.exports = {
       {
         netflix: {
           primary: "#e50914",
-          "primary-content": "#000000",
-          secondary: "#221f1f",
-          accent: "#c149ad",
-          neutral: "#ffffff",
-          "base-100": "#f5f5f1",
+          "primary-content": "#ffffff",
+          secondary: "#2d2d2d",
+          "secondary-content": "#737373",
+          "base-100": "#000000",
         },
       },
     ],
