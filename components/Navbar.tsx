@@ -6,7 +6,6 @@ import Avatar from "@/public/images/avatar.png";
 import {
   Bars3CenterLeftIcon,
   MagnifyingGlassIcon,
-  XMarkIcon,
 } from "@heroicons/react/24/solid";
 
 import Link from "next/link";
@@ -21,7 +20,7 @@ export default function Navbar() {
   const [user, setUser] = useState<string | null>(null);
 
   return (
-    <nav className="navbar justify-between fixed bg-gradient-to-b from-black to-[rgba(0,0,0,0)] px-8 md:px-12 lg:px-16 h-[10vh]">
+    <nav className="navbar justify-between fixed bg-gradient-to-b from-black to-[rgba(0,0,0,0)] px-8 md:px-12 lg:px-16 h-[10vh] z-20">
       <div className="lg:navbar-start lg:uppercase font-light">
         <div className="lg:hidden dropdown dropdown-bottom">
           <label

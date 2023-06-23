@@ -4,6 +4,6 @@
 
 @layer base {
     body {
-        @apply text-primary-content
+        @apply text-primary-content overflow-x-hidden scrollbar-hide
     }
 }
