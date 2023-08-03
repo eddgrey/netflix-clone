@@ -3,28 +3,25 @@
 import Image from "next/image";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
-
-type Video = {
-  id: string;
-  imageUrl: string;
-};
+import { MovieCard } from "@/lib/types";
 
 interface Props {
-  video: Video;
+  movie: MovieCard;
   width: number;
   height: number;
 }
 
-export default function Card({ video, width, height }: Props) {
+export default function Card({ movie, width, height }: Props) {
   const router = useRouter();
+  const { id, imageUrl } = movie;
   return (
     <motion.div
       whileHover={{ scale: 1.1 }}
-      onClick={() => router.push(`video/${video.id}`)}
+      onClick={() => router.push(`movie/${id}`)}
       className="carousel-item mr-1 hover:cursor-pointer"
     >
       <Image
-        src={video.imageUrl}
+        src={imageUrl}
         alt=""
         width={width}
         height={height}
