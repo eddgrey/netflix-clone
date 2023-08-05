@@ -1,14 +1,9 @@
-import Hero from "@/components/Hero";
 import { getMovieDetails } from "@/lib/api";
+import Hero from "@/components/Hero";
 import Image from "next/image";
 
-
-export default async function Movie() {
-
-  const { details, cast, images, videos } = await getMovieDetails("502356");
-
-  console.log(images);
-
+export default async function Movie({ params }: { params: { id: string } }) {
+  const { details, cast, images, videos } = await getMovieDetails(params.id);
   return (
     <main>
       <Hero details={details} />

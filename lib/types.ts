@@ -33,3 +33,9 @@ export type Movie = {
   images: string[]
   cast: Actor[];
 };
+
+export type FilterForm = {
+  genres: string,
+  year: string,
+  sortBy: string
+}

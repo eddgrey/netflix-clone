@@ -13,6 +13,7 @@ import Image from "next/image";
 import { usePathname } from "next/navigation";
 
 import { useState } from "react";
+import SearchBar from "./SearchBar";
 
 export default function Navbar() {
   const pathname = usePathname();
@@ -56,13 +57,7 @@ export default function Navbar() {
 
       {user && (
         <div className="lg:navbar-end space-x-2 md:space-x-6">
-          <div>
-            <label className="swap swap-active">
-              <div className="swap-on fill btn btn-circle btn-ghost">
-                <MagnifyingGlassIcon className="h-6" />
-              </div>
-            </label>
-          </div>
+          <SearchBar />
           <div className="dropdown dropdown-end">
             <label tabIndex={0} className="btn btn-circle avatar">
               <div className="w-24 rounded-full">

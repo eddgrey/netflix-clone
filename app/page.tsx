@@ -1,6 +1,5 @@
 import Category from "@/components/Category";
 import Hero from "@/components/Hero";
-import Navbar from "@/components/Navbar";
 import {
   getMovieDetails,
   getPopularMovies,
@@ -28,7 +27,6 @@ export default async function Home() {
   // console.log(popularMovies);
   return (
     <main>
-      <Navbar />
       <Hero details={heroMovie.details} />
       <section className="px-8 md:px-12 lg:px-16 mt-16 mb-32 space-y-16">
         <Category

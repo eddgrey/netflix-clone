@@ -1,13 +1,12 @@
-import { Movie, MovieCard } from "./types";
+import { FilterForm, Movie, MovieCard } from "./types";
 
 
 const IMAGE_BASE_URL = "https://image.tmdb.org/t/p/original"
 
 async function fetchData(URL: string) {
   const TMDB_API_KEY = process.env.TMDB_API_KEY;
-  const data = await fetch(`https://${URL}&api_key=${TMDB_API_KEY}`);
+  const data = await fetch(`https://${URL}&api_key=${"827df123708d8b45f7989add0567f0a8"}`);
   const dataJson = await data.json();
-  // console.log(dataJson);
   return dataJson;
 }
 
@@ -21,6 +20,31 @@ async function getMovies(URL: string): Promise<MovieCard[]> {
   }));
 
   return movies;
+}
+
+export async function searchMovies(query: string): Promise<MovieCard[]> {
+  const URL = "api.themoviedb.org/3/search/movie?"
+  const { results } = await fetchData(URL + `query=${query}&include_adult=false&language=es-MX&page=1`)
+  return results.map(({ id, title, poster_path }) => ({
+    id,
+    title,
+    imageUrl: IMAGE_BASE_URL + poster_path,
+  })).slice(0, 6);
+}
+
+export async function discoverMovies({ genres, year, sortBy }: FilterForm, page: number): Promise<{ resultingMovies: MovieCard[], totalResultingPages: number }> {
+  const URL = "api.themoviedb.org/3/discover/movie?include_adult=false&include_video=false&language=es-MX"
+  const queryFilters = (genres ? `&with_genres=${genres}` : "") + (year ? `&year=${year}` : "") + `&sort_by=${sortBy}`
+  const { results, total_pages } = await fetchData(URL + queryFilters + `&page=${page}`)
+
+  return {
+    resultingMovies: results.map(({ id, title, backdrop_path }) => ({
+      id,
+      title,
+      imageUrl: IMAGE_BASE_URL + backdrop_path,
+    })),
+    totalResultingPages: total_pages
+  };
 }
 
 export async function getMovieDetails(movieId: string): Promise<Movie> {
