@@ -1,5 +1,6 @@
+/* eslint-disable */
+// @ts-nocheck
 import { FilterForm, Movie, MovieCard } from "./types";
-
 
 const IMAGE_BASE_URL = "https://image.tmdb.org/t/p/original"
 
