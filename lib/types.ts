@@ -16,6 +16,7 @@ type Actor = {
 };
 
 export type MovieDetails = {
+  id: string;
   title: string;
   overview: string;
   year: string;

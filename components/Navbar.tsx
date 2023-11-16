@@ -2,47 +2,58 @@
 
 import NavLink from "./NavLink";
 import NetflixIcon from "@/public/images/netflix-icon.svg";
-import Avatar from "@/public/images/avatar.png";
-import {
-  Bars3CenterLeftIcon,
-  MagnifyingGlassIcon,
-} from "@heroicons/react/24/solid";
+import { Bars3CenterLeftIcon, UserIcon } from "@heroicons/react/24/solid";
 
 import Link from "next/link";
 import Image from "next/image";
 import { usePathname } from "next/navigation";
 
-import { useState } from "react";
 import SearchBar from "./SearchBar";
+import { useUser } from "@/providers/userProvider";
 
 export default function Navbar() {
   const pathname = usePathname();
-  console.log(pathname);
-  const [user, setUser] = useState<string | null>(null);
+  const { user, setUser } = useUser();
+
+  if (pathname === "/login") {
+    return null;
+  }
 
   return (
-    <nav className="navbar justify-between fixed bg-gradient-to-b from-black to-[rgba(0,0,0,0)] px-8 md:px-12 lg:px-16 h-[10vh] z-20">
+    <nav className="navbar justify-between fixed bg-base-100/80 px-8 md:px-12 lg:px-16 h-[10vh] z-50">
       <div className="lg:navbar-start lg:uppercase font-light">
         <div className="lg:hidden dropdown dropdown-bottom">
-          <label
-            tabIndex={0}
-            className="btn btn-circle btn-ghost hover:bg-base-100/75"
-          >
+          <label tabIndex={0} className="btn btn-circle btn-ghost">
             <Bars3CenterLeftIcon className="h-8" />
           </label>
           <ul
             tabIndex={0}
-            className="dropdown-content py-4 px-6 md:py-6 md:px-8 space-y-2 md:space-y-4 rounded-box shadow bg-base-100/75"
+            className="dropdown-content w-max py-4 px-6 md:py-6 md:px-8 space-y-2 md:space-y-4 rounded-box shadow bg-base-100/95"
           >
-            <NavLink href="/" text="Home" />
-            <NavLink href="/movies" text="Películas" />
-            <NavLink href="/series" text="Series" />
+            <NavLink href="/" text="Inicio" />
+            <NavLink href="/discover" text="Explorar" />
+            <NavLink href="/favorite" text="Favorito" />
+            {user ? (
+              <button
+                className="decoration-primary decoration-2 underline-offset-8 hover:underline mt-4"
+                onClick={() => setUser(null)}
+              >
+                Cerrar Sesión
+              </button>
+            ) : (
+              <Link
+                href="/login"
+                className="decoration-primary decoration-2 underline-offset-8 hover:underline mt-4"
+              >
+                Iniciar Sesión
+              </Link>
+            )}
           </ul>
         </div>
         <ul className="hidden lg:flex space-x-6">
-          <NavLink href="/" text="Home" />
-          <NavLink href="/movies" text="Películas" />
-          <NavLink href="/series" text="Series" />
+          <NavLink href="/" text="Inicio" />
+          <NavLink href="/discover" text="Explorar" />
+          <NavLink href="/favorite" text="Favorito" />
         </ul>
       </div>
       <div className="lg:navbar-center">
@@ -58,17 +69,14 @@ export default function Navbar() {
       {user && (
         <div className="lg:navbar-end space-x-2 md:space-x-6">
           <SearchBar />
-          <div className="dropdown dropdown-end">
-            <label tabIndex={0} className="btn btn-circle avatar">
-              <div className="w-24 rounded-full">
-                <Image src={Avatar} alt="avatar" />
-              </div>
+          <div className="hidden md:flex dropdown dropdown-end">
+            <label tabIndex={0} className="btn btn-circle btn-primary">
+              <UserIcon className="h-8 w-8" />
             </label>
             <ul
               tabIndex={0}
               className="dropdown-content bg-base-100/75 rounded-box min-w-max shadow mt-2 py-6 px-6 md:px-8 space-y-2 md:space-y-4 "
             >
-              <NavLink href="" text="Mi Lista" />
               <li>
                 <button
                   className="decoration-primary decoration-2 underline-offset-8 hover:underline"
@@ -83,10 +91,11 @@ export default function Navbar() {
       )}
 
       {!user && (
-        <div className="lg:navbar-end">
-          <button className="btn btn-primary" onClick={() => setUser("user")}>
+        <div className="lg:navbar-end space-x-2 md:space-x-6">
+          <SearchBar />
+          <Link href="/login" className="hidden md:flex btn btn-primary">
             Iniciar Sesión
-          </button>
+          </Link>
         </div>
       )}
     </nav>

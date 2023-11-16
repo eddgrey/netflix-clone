@@ -4,7 +4,6 @@ import Image from "next/image";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import { MovieCard } from "@/lib/types";
-
 interface Props {
   movie: MovieCard;
   width: number;
@@ -14,6 +13,7 @@ interface Props {
 export default function Card({ movie, width, height }: Props) {
   const router = useRouter();
   const { id, imageUrl } = movie;
+
   return (
     <motion.div
       whileHover={{ scale: 1.1 }}
@@ -22,7 +22,7 @@ export default function Card({ movie, width, height }: Props) {
     >
       <Image
         src={imageUrl}
-        alt=""
+        alt={movie.title}
         width={width}
         height={height}
         className="object-cover"

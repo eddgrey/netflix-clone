@@ -4,8 +4,7 @@ import { FilterForm, Movie, MovieCard } from "./types";
 const IMAGE_BASE_URL = "https://image.tmdb.org/t/p/original"
 
 async function fetchData(URL: string) {
-  const TMDB_API_KEY = process.env.TMDB_API_KEY;
-  const data = await fetch(`https://${URL}&api_key=${"827df123708d8b45f7989add0567f0a8"}`);
+  const data = await fetch(`https://${URL}&api_key=${process.env.NEXT_PUBLIC_TMDB_API_KEY}`);
   const dataJson = await data.json();
   return dataJson;
 }
@@ -16,20 +15,27 @@ async function getMovies(URL: string): Promise<MovieCard[]> {
   const movies = data.map(({ id, title, poster_path }) => ({
     id,
     title,
-    imageUrl: IMAGE_BASE_URL + poster_path,
+    imageUrl: poster_path ? IMAGE_BASE_URL + poster_path : "/images/placeholder.png",
   }));
 
   return movies;
 }
 
-export async function searchMovies(query: string): Promise<MovieCard[]> {
+type SearchMoviesType = {
+  resultingMovies: MovieCard[]
+  totalResultingPages: number
+}
+
+export async function searchMovies(query: string, limit?: number, page?: number): Promise<SearchMoviesType> {
   const URL = "api.themoviedb.org/3/search/movie?"
-  const { results } = await fetchData(URL + `query=${query}&include_adult=false&language=es-MX&page=1`)
-  return results.map(({ id, title, poster_path }) => ({
-    id,
-    title,
-    imageUrl: IMAGE_BASE_URL + poster_path,
-  })).slice(0, 6);
+  const { results, total_pages } = await fetchData(URL + `query=${query}&include_adult=false&language=es-MX&page=${page ? page : 1}`)
+  return {
+    resultingMovies: results.map(({ id, title, poster_path }) => ({
+      id,
+      title,
+      imageUrl: poster_path ? IMAGE_BASE_URL + poster_path : "/images/placeholder.png",
+    })).slice(0, limit ? limit : undefined), totalResultingPages: total_pages
+  }
 }
 
 export async function discoverMovies({ genres, year, sortBy }: FilterForm, page: number): Promise<{ resultingMovies: MovieCard[], totalResultingPages: number }> {
@@ -41,7 +47,7 @@ export async function discoverMovies({ genres, year, sortBy }: FilterForm, page:
     resultingMovies: results.map(({ id, title, backdrop_path }) => ({
       id,
       title,
-      imageUrl: IMAGE_BASE_URL + backdrop_path,
+      imageUrl: backdrop_path ? IMAGE_BASE_URL + backdrop_path : "/images/placeholder.png",
     })),
     totalResultingPages: total_pages
   };
@@ -50,8 +56,6 @@ export async function discoverMovies({ genres, year, sortBy }: FilterForm, page:
 export async function getMovieDetails(movieId: string): Promise<Movie> {
   const URL = `api.themoviedb.org/3/movie/${movieId}?append_to_response=videos,images,credits&language=es-MX`;
   const details = await fetchData(URL);
-  // const img = await fetchData(`api.themoviedb.org/3/movie/${movieId}/images`)
-  // console.log(img);
   const videos = details.videos.results.map((video) => ({
     name: video.name,
     type: video.type,
@@ -60,9 +64,7 @@ export async function getMovieDetails(movieId: string): Promise<Movie> {
 
   const posters = details.images.posters.map(poster => IMAGE_BASE_URL + poster.file_path)
 
-  console.log(details.images)
-
-  const trailer = videos.filter((video) => video.type === "Trailer")
+  const trailer = videos.filter((video) => video.type === "Trailer" && video.key)
   const teaser = videos.filter((video) => video.type === "Teaser")
   const clip = videos.filter((video) => video.type === "Clip")
 
@@ -76,6 +78,7 @@ export async function getMovieDetails(movieId: string): Promise<Movie> {
 
   return {
     details: {
+      id: movieId,
       title: details.title,
       overview: details.overview,
       year: details.release_date.split("-")[0],
@@ -96,7 +99,6 @@ export async function getMovieDetails(movieId: string): Promise<Movie> {
 export async function getPopularMovies() {
   const URL = "/popular?language=es-MX&page=1";
   const movies = await getMovies(URL);
-  // console.log(movies);
   return movies;
 }
 

@@ -9,7 +9,9 @@ export default async function Movie({ params }: { params: { id: string } }) {
       <Hero details={details} />
       <section className="px-8 md:px-12 lg:px-16 mb-32 space-y-16">
         <div>
-          <h3 className="text-xl font-medium tracking-wider mb-4">Elenco Principal</h3>
+          <h3 className="text-xl font-medium tracking-wider mb-4">
+            Elenco Principal
+          </h3>
           <ul className="flex space-x-8 carousel">
             {cast.map(({ name, character, imageUrl }) => (
               <li
@@ -34,7 +36,10 @@ export default async function Movie({ params }: { params: { id: string } }) {
           <h3 className="text-xl font-medium tracking-wider mb-4">Videos</h3>
           <ul className="carousel w-full">
             {videos.map((video) => (
-              <li className="carousel-item hover:cursor-pointer mr-3">
+              <li
+                key={video.key}
+                className="carousel-item hover:cursor-pointer mr-3"
+              >
                 <iframe
                   key={video.key}
                   width="436"
@@ -46,13 +51,20 @@ export default async function Movie({ params }: { params: { id: string } }) {
             ))}
           </ul>
         </div>
-
         <div>
           <h3 className="text-xl font-medium tracking-wider mb-4">Imágenes</h3>
           <ul className="carousel w-full">
-            {images.map(imageUrl => (
-              <li className="carousel-item mr-3 relative h-[434px] w-[218px] hover:cursor-pointer">
-                <Image src={imageUrl} alt="poster" fill className="object-cover rounded-lg" />
+            {images.map((imageUrl) => (
+              <li
+                key={imageUrl}
+                className="carousel-item mr-3 relative h-[434px] w-[218px] hover:cursor-pointer"
+              >
+                <Image
+                  src={imageUrl}
+                  alt="poster"
+                  fill
+                  className="object-cover rounded-lg"
+                />
               </li>
             ))}
           </ul>

@@ -1,4 +1,5 @@
 "use client";
+
 import {
   CalendarDaysIcon,
   ClockIcon,
@@ -6,23 +7,49 @@ import {
   StarIcon,
   HeartIcon,
 } from "@heroicons/react/24/solid";
-import { useRef } from "react";
+import { HeartIcon as HeartIconOutline } from "@heroicons/react/24/outline";
+import { useRef, useState } from "react";
 
 import Modal from "./Modal";
 import { MovieDetails } from "@/lib/types";
+import { useUser } from "@/providers/userProvider";
 interface Props {
   details: MovieDetails;
 }
 
-// https://image.tmdb.org/t/p/original/ddfGBZiyOhVCAOtffie7AiXVYiE.jpg
-
 export default function Hero({ details }: Props) {
-  const { title, overview, backdropUrl, genres, score, year, duration } = details;
+  const { title, overview, backdropUrl, genres, score, year, duration, id } =
+    details;
   const modalRef = useRef<HTMLDialogElement | null>(null);
+  const hasTrailer = !!details.trailer?.key;
+  const { favorites, setFavorites, videosWatched, setVideosWatched } =
+    useUser();
+  const isFavorite =
+    favorites.filter((favorite) => String(favorite.id) === id).length === 1;
+  const [videoKey, setVideoKey] = useState(details.trailer?.key);
+
+  const handleFavorite = (id: string) => {
+    if (isFavorite) {
+      setFavorites(favorites.filter((favorite) => String(favorite.id) !== id));
+    } else {
+      setFavorites([
+        ...favorites,
+        { id: Number(id), imageUrl: details.backdropUrl, title },
+      ]);
+    }
+  };
+
+  const watchVideo = () => {
+    const video = details.trailer.key;
+    if (!videosWatched.includes(video)) {
+      setVideosWatched([...videosWatched, video]);
+    }
+  };
+
   return (
     <div
       style={{ backgroundImage: `url("${backdropUrl}")` }}
-      className={`hero min-h-[75vh] w-screen mb-16`}
+      className={`hero min-h-[85vh] w-screen mb-16`}
     >
       <div className="hero-overlay bg-black/40"></div>
       <div className="hero-content flex-col items-start justify-self-start space-y-8 px-8 md:px-12 lg:px-16">
@@ -53,20 +80,35 @@ export default function Hero({ details }: Props) {
         </div>
         <div className="space-x-4">
           <button
-            className="btn btn-primary"
-            onClick={() => modalRef.current!.showModal()}
+            className="btn btn-primary disabled:bg-primary/70 disabled:text-primary-content/40"
+            disabled={!hasTrailer}
+            onClick={() => {
+              setVideoKey(details.trailer.key);
+              watchVideo();
+              modalRef.current!.showModal();
+            }}
           >
             <PlayIcon className="h-5" />
             <span>Ver Trailer</span>
           </button>
-          <button className="btn btn-accent">
-            <HeartIcon className="h-5" />
+          <button className="btn btn-accent" onClick={() => handleFavorite(id)}>
+            {isFavorite ? (
+              <HeartIcon className="h-5" />
+            ) : (
+              <HeartIconOutline className="h-5" />
+            )}
             <span>Favorito</span>
           </button>
         </div>
-      </div >
+      </div>
 
-      <Modal modalRef={modalRef} trailer={details.trailer} />
-    </div >
+      {hasTrailer && (
+        <Modal
+          modalRef={modalRef}
+          videoKey={videoKey}
+          setVideoKey={setVideoKey}
+        />
+      )}
+    </div>
   );
 }
