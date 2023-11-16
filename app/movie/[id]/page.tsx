@@ -44,7 +44,7 @@ export default async function Movie({ params }: { params: { id: string } }) {
                   key={video.key}
                   width="436"
                   height="217"
-                  src={`http://www.youtube.com/embed/${video.key}?autoplay=0&rel=0`}
+                  src={`https://www.youtube.com/embed/${video.key}?autoplay=0&rel=0`}
                   className="rounded-lg"
                 />
               </li>

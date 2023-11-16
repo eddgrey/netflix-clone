@@ -19,7 +19,7 @@ export default function WatchedVideos() {
               key={video}
               width="480"
               height="300"
-              src={`http://www.youtube.com/embed/${video}?autoplay=0&rel=0`}
+              src={`https://www.youtube.com/embed/${video}?autoplay=0&rel=0`}
               className="rounded-lg"
             />
           </li>

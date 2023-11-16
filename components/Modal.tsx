@@ -18,7 +18,7 @@ export default function Modal({ videoKey, setVideoKey, modalRef }: Props) {
         <iframe
           key={videoKey}
           id="ytplayer"
-          src={`http://www.youtube.com/embed/${videoKey}?autoplay=1&rel=0`}
+          src={`https://www.youtube.com/embed/${videoKey}?autoplay=1&rel=0`}
           allowFullScreen
           className="w-full h-full"
         />
